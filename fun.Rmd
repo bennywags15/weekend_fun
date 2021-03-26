@@ -20,8 +20,10 @@ library(ggplot2)
 ```{r}
 us_18Q1 <- read_csv("us_18Q1.csv")
 
-eighteen <- us_18Q1 %>% 
-  filter(DEM_AGE == 18)
+#Filter data to all current 18-24 y/o college students
+currentcollege <- us_18Q1 %>% 
+  filter(DEM_COLLEGE == 1,
+         DEM_AGE10 == 1)
 
-eighteen
+currentcollege
 ```
