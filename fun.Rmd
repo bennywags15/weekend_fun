@@ -14,6 +14,7 @@ library(readr)
 library(tidyverse)
 library(dplyr) 
 library(readr)
+library(broom)
 library(ggplot2)
 library(ggmosaic)
 library(ggtext)
@@ -202,5 +203,33 @@ ggplot(aes(x = is_college_18_24, fill = any_nmu)) +
         legend.background = element_rect(fill = "ivory"),
         axis.text.x = element_text(size = 8, colour = "Black"),
         axis.text.y = element_text(size = 8, colour = "Black"))
+```
+
+```{r}
+a <- us_18Q1 %>% 
+  filter(DEM_AGE10 == 1,
+         DEM_COLLEGE == 1,
+         DEM_STDNT == 1) %>% 
+  rename(Fentanyl = FENT_NMU,
+         Buprenorphine = BUP_NMU,
+         Methadone = METH_NMU,
+         Morphine = MORPH_NMU,
+         Oxycodone = OXY_NMU,
+         Oxymorphone = OXYM_NMU,
+         Tramadol = TRAM_NMU,
+         Tapentadol = TAP_NMU,
+         Hydrocodone = HYD_NMU,
+         Hydromorphone = HYDM_NMU,
+         Sufentanil = SUF_NMU,
+         Codeine = COD_NMU,
+         Dihydrocodeine = DIHY_NMU) %>% 
+  replace(is.na(.), 0) %>%
+  mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
+
+#Regression model on greek life
+glm.mod <- a %>% with(glm(any_nmu ~ COLLEGE_GREEK, family = binomial))
+glm.mod
+tidy(glm.mod)
+exp(confint(glm.mod)) %>% round(2)
 ```
 
