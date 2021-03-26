@@ -64,8 +64,7 @@ eighteen %>%
         plot.background = element_rect(fill = "lightgrey"),
         panel.background = element_rect(fill = "lightgrey"),
         axis.text.x = element_text(size = 9, colour = "Black"),
-        axis.text.y = element_text(size = 10, colour = "Black"),
-        legend.position = "none"
+        axis.text.y = element_text(size = 10, colour = "Black")
         )
 ```
 
