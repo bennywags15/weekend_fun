@@ -15,6 +15,8 @@ library(tidyverse)
 library(dplyr) 
 library(readr)
 library(ggplot2)
+library(ggmosaic)
+library(ggtext)
 ```
 
 ```{r}
@@ -66,7 +68,7 @@ eighteen %>%
 ```
 
 ```{r}
-#Adding indicator of ANY non-medical prescription opiod use
+#Adding indicator of ANY non-medical prescription opioid use (18-24 in college)
 eighteen_nmu <- eighteen %>% 
   select(ends_with("NMU")) %>% 
   rename(Fentanyl = FENT_NMU,
@@ -86,5 +88,90 @@ eighteen_nmu <- eighteen %>%
   replace(is.na(.), 0) %>%
   mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
 
-eighteen_nmu
+eighteen_nmu %>% 
+  count(any_nmu)
 ```
+
+```{r}
+#Adding indicator of ANY non-medical prescription opioid use (NOT 18-24 in college)
+not_eighteen <- us_18Q1 %>% 
+  filter(DEM_AGE10 != 1,
+         is.na(DEM_COLLEGE),
+         DEM_STDNT != 1)
+
+not_eighteen_nmu <- not_eighteen %>% 
+  select(ends_with("NMU")) %>% 
+  rename(Fentanyl = FENT_NMU,
+         Buprenorphine = BUP_NMU,
+         Methadone = METH_NMU,
+         Morphine = MORPH_NMU,
+         Oxycodone = OXY_NMU,
+         Oxymorphone = OXYM_NMU,
+         Tramadol = TRAM_NMU,
+         Tapentadol = TAP_NMU,
+         Hydrocodone = HYD_NMU,
+         Hydromorphone = HYDM_NMU,
+         Sufentanil = SUF_NMU,
+         Codeine = COD_NMU,
+         Dihydrocodeine = DIHY_NMU) %>% 
+  select(Fentanyl:Dihydrocodeine) %>% 
+  replace(is.na(.), 0) %>%
+  mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
+
+not_eighteen_nmu %>% 
+  count(any_nmu)
+```
+
+```{r}
+#Adding indicator of ANY non-medical prescription opioid use (everybody)
+total_nmu <- us_18Q1 %>% 
+  filter((DEM_AGE10 == 1 & DEM_COLLEGE == 1 & DEM_STDNT == 1) | (DEM_AGE10 != 1 & is.na(DEM_COLLEGE) & DEM_STDNT != 1)) %>% #filters in college and 18-24 or not in college AND not 18-24
+  rename(Fentanyl = FENT_NMU,
+         Buprenorphine = BUP_NMU,
+         Methadone = METH_NMU,
+         Morphine = MORPH_NMU,
+         Oxycodone = OXY_NMU,
+         Oxymorphone = OXYM_NMU,
+         Tramadol = TRAM_NMU,
+         Tapentadol = TAP_NMU,
+         Hydrocodone = HYD_NMU,
+         Hydromorphone = HYDM_NMU,
+         Sufentanil = SUF_NMU,
+         Codeine = COD_NMU,
+         Dihydrocodeine = DIHY_NMU) %>% 
+  select(DEM_AGE10,
+         DEM_COLLEGE,
+         DEM_STDNT,
+         Fentanyl:Dihydrocodeine) %>% 
+  mutate(is_college_18_24 = (DEM_AGE10 == 1 & DEM_COLLEGE == 1 & DEM_STDNT == 1),
+         is_not_college_18_24 = (DEM_AGE10 != 1 & is.na(DEM_COLLEGE) & DEM_STDNT != 1)) %>% 
+  replace(is.na(.), 0) %>%
+  mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1)) 
+
+total_nmu %>% 
+  count(is_college_18_24, any_nmu) %>% 
+  arrange(n)
+```
+
+```{r}
+#Stacked bar plot of NMU in college 18-24 vs not
+total_nmu %>% 
+ggplot(aes(x = is_college_18_24, fill = any_nmu)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  geom_text(aes(label = "18.64%", x = 2, y = 0.0932)) +
+  geom_text(aes(label = "12.00%", x = 1, y = 0.06)) +
+  labs(title = "Non-medical use (NMU) of prescription opiods", x = "18-24 years old and in college", y = "") +
+  scale_fill_manual(name = "NMU", labels = c("No", "Yes"), values = c("#3881B6", "#D7864C")) +
+  theme(plot.title = element_text(size = 13, face = "bold", hjust = -0.3, colour = "Black"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.background = element_rect(fill = "ivory"),
+        panel.background = element_rect(fill = "ivory"),
+        legend.background = element_rect(fill = "ivory"),
+        axis.text.x = element_text(size = 8, colour = "Black"),
+        axis.text.y = element_text(size = 8, colour = "Black"))
+```
+
