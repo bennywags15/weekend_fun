@@ -23,11 +23,11 @@ us_18Q1 <- read_csv("us_18Q1.csv")
 eighteen <- us_18Q1 %>% 
   filter(DEM_AGE10 == 1,
          DEM_COLLEGE == 1,
-         DEM_STDNT == 1) %>% 
-  select( ends_with("NMU"))  #select non-medical use
+         DEM_STDNT == 1) 
 
 #opioid non-medical use
 eighteen %>% 
+  select(ends_with("NMU")) %>% 
   rename(Fentanyl = FENT_NMU,
          Buprenorphine = BUP_NMU,
          Methadone = METH_NMU,
@@ -47,7 +47,7 @@ eighteen %>%
                names_to = "drug",
                values_to = "num") %>% 
   ggplot(aes(x = num, y = fct_reorder(drug, num))) +
-  geom_col(color = "#21C09C", fill = "#21C09C") +
+  geom_col(fill = "#21C09C") +
   labs(title = "Non-medical use of opioids by college students age 18-24 in 2018", x = "", y = "", caption = "Totals out of 1,277 college students age 18-24 surveyed in 2018") +
   theme(plot.title = element_text(size = 14, face = "bold", hjust = 7.55, colour = "Black"),
         plot.subtitle = element_text(colour = "Black"),
