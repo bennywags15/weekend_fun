@@ -20,10 +20,19 @@ library(ggplot2)
 ```{r}
 us_18Q1 <- read_csv("us_18Q1.csv")
 
-#Filter data to all current 18-24 y/o college students
-currentcollege <- us_18Q1 %>% 
-  filter(DEM_COLLEGE == 1,
-         DEM_AGE10 == 1)
+eighteen <- us_18Q1 %>% 
+  filter(DEM_AGE10 == 1,
+         DEM_COLLEGE == 1,
+         DEM_STDNT == 1) %>% 
+  select(FENT_USE:DIHY_NMU)
 
-currentcollege
+#opioid use
+eighteen %>% 
+  replace(is.na(.), 0) %>% 
+  summarise_all(funs(sum)) %>% 
+  pivot_longer(cols = FENT_USE:DIHY_NMU,
+               names_to = "drug",
+               values_to = "num") %>% 
+  ggplot(aes(x = num, y = drug)) +
+  geom_col()
 ```
