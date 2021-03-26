@@ -23,16 +23,68 @@ us_18Q1 <- read_csv("us_18Q1.csv")
 eighteen <- us_18Q1 %>% 
   filter(DEM_AGE10 == 1,
          DEM_COLLEGE == 1,
-         DEM_STDNT == 1) %>% 
-  select(FENT_USE:DIHY_NMU)
+         DEM_STDNT == 1) 
+```
 
-#opioid use
+```{r}
+#PHARMACEUTICAL/PRESCRIPTION opioids non-medical use
 eighteen %>% 
+  select(ends_with("NMU")) %>% 
+  rename(Fentanyl = FENT_NMU,
+         Buprenorphine = BUP_NMU,
+         Methadone = METH_NMU,
+         Morphine = MORPH_NMU,
+         Oxycodone = OXY_NMU,
+         Oxymorphone = OXYM_NMU,
+         Tramadol = TRAM_NMU,
+         Tapentadol = TAP_NMU,
+         Hydrocodone = HYD_NMU,
+         Hydromorphone = HYDM_NMU,
+         Sufentanil = SUF_NMU,
+         Codeine = COD_NMU,
+         Dihydrocodeine = DIHY_NMU) %>% 
   replace(is.na(.), 0) %>% 
   summarise_all(funs(sum)) %>% 
-  pivot_longer(cols = FENT_USE:DIHY_NMU,
+  pivot_longer(cols = Fentanyl:Dihydrocodeine,
                names_to = "drug",
                values_to = "num") %>% 
-  ggplot(aes(x = num, y = drug)) +
-  geom_col()
+  ggplot(aes(x = num, y = fct_reorder(drug, num))) +
+  geom_col(fill = "#21C09C") +
+  labs(title = "Non-medical use of prescription opioids by college students age 18-24 in 2018", x = "", y = "", caption = "Totals out of 1,277 college students age 18-24 surveyed in 2018") +
+  theme(plot.title = element_text(size = 13, face = "bold", hjust = 1.5, colour = "Black"),
+        plot.subtitle = element_text(colour = "Black"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.background = element_rect(fill = "lightgrey"),
+        panel.background = element_rect(fill = "lightgrey"),
+        axis.text.x = element_text(size = 9, colour = "Black"),
+        axis.text.y = element_text(size = 10, colour = "Black"),
+        legend.position = "none"
+        )
+```
+
+```{r}
+#Adding indicator of ANY non-medical prescription opiod use
+eighteen_nmu <- eighteen %>% 
+  select(ends_with("NMU")) %>% 
+  rename(Fentanyl = FENT_NMU,
+         Buprenorphine = BUP_NMU,
+         Methadone = METH_NMU,
+         Morphine = MORPH_NMU,
+         Oxycodone = OXY_NMU,
+         Oxymorphone = OXYM_NMU,
+         Tramadol = TRAM_NMU,
+         Tapentadol = TAP_NMU,
+         Hydrocodone = HYD_NMU,
+         Hydromorphone = HYDM_NMU,
+         Sufentanil = SUF_NMU,
+         Codeine = COD_NMU,
+         Dihydrocodeine = DIHY_NMU) %>% 
+  select(Fentanyl:Dihydrocodeine) %>% 
+  replace(is.na(.), 0) %>%
+  mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
+
+eighteen_nmu
 ```
