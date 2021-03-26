@@ -112,16 +112,6 @@ eighteen$any_nmu_numeric <- eighteen_nmu$any_nmu_numeric[match(eighteen$ID, eigh
 
 
 ```{r}
-#Multiple logistic regression exploration of variables that are potentially related with non-medical use of opioids, *any_nmu_numeric*
-
-#State: Non-Significant
-glm_fit <- glm(any_nmu_numeric ~ DEM_STATE, data = eighteen, family = binomial)
-
-summary(glm_fit)
-```
-
-
-```{r}
 #Adding indicator of ANY non-medical prescription opioid use (NOT 18-24 in college)
 not_eighteen <- us_18Q1 %>% 
   filter(DEM_AGE10 != 1,
@@ -191,7 +181,7 @@ ggplot(aes(x = is_college_18_24, fill = any_nmu)) +
   scale_y_continuous(labels = scales::percent) +
   geom_text(aes(label = "18.64%", x = 2, y = 0.0932)) +
   geom_text(aes(label = "12.00%", x = 1, y = 0.06)) +
-  labs(title = "Non-medical use (NMU) of prescription opiods in 2018", x = "18-24 years old and in college", y = "") +
+  labs(title = "Non-medical use (NMU) of prescription opioids in 2018", x = "18-24 years old and in college", y = "") +
   scale_fill_manual(name = "NMU", labels = c("No", "Yes"), values = c("#3881B6", "#D7864C")) +
   theme(plot.title = element_text(size = 13, face = "bold", hjust = -0.5, colour = "Black"),
         panel.grid.major.x = element_blank(),
@@ -226,10 +216,51 @@ a <- us_18Q1 %>%
   replace(is.na(.), 0) %>%
   mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
 
-#Regression model on greek life
+#Regression model on greek life: Significant
 glm.mod <- a %>% with(glm(any_nmu ~ COLLEGE_GREEK, family = binomial))
 glm.mod
 tidy(glm.mod)
 exp(confint(glm.mod)) %>% round(2)
 ```
 
+
+
+```{r}
+#Multiple logistic regression exploration of variables potentially related with non-medical use of opioids, *any_nmu_numeric*
+
+#State: Non-Significant
+glm_fit <- glm(any_nmu_numeric ~ DEM_STATE, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Region: Non-Significant
+glm_fit <- glm(any_nmu_numeric ~ DEM_REGION, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Gender: Highly Significant. Negative coefficient, so males are more likely than females for NMU
+glm_fit <- glm(any_nmu_numeric ~ DEM_GENDER, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Age: Significant at 0.05 level. Positive coefficient, so older individuals more likely
+glm_fit <- glm(any_nmu_numeric ~ DEM_AGE, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Hispanic: Non-Significant
+glm_fit <- glm(any_nmu_numeric ~ DEM_HISPANIC, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Race: Non-Significant here, but this isn't a good way to look at it (Race is coded as quantitative in the dataframe)
+glm_fit <- glm(any_nmu_numeric ~ DEM_RACE, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Income: Non-significant
+glm_fit <- glm(any_nmu_numeric ~ DEM_INCOME, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#College Size: Non-Significant
+glm_fit <- glm(any_nmu_numeric ~ COLLEGE_SIZE, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#College Housing: Significant. Positive coefficient so students living in on-campus housing are more likely for NMU. Counter-Intuitive??
+glm_fit <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
+summary(glm_fit)
+```
