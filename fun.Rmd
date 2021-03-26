@@ -237,12 +237,12 @@ glm_fit <- glm(any_nmu_numeric ~ DEM_REGION, data = eighteen, family = binomial)
 summary(glm_fit)
 
 #Gender: Highly Significant. Negative coefficient, so males are more likely than females for NMU
-glm_fit <- glm(any_nmu_numeric ~ DEM_GENDER, data = eighteen, family = binomial)
-summary(glm_fit)
+glm_fit1 <- glm(any_nmu_numeric ~ DEM_GENDER, data = eighteen, family = binomial)
+summary(glm_fit1)
 
 #Age: Significant at 0.05 level. Positive coefficient, so older individuals more likely
-glm_fit <- glm(any_nmu_numeric ~ DEM_AGE, data = eighteen, family = binomial)
-summary(glm_fit)
+glm_fit2 <- glm(any_nmu_numeric ~ DEM_AGE, data = eighteen, family = binomial)
+summary(glm_fit2)
 
 #Hispanic: Non-Significant
 glm_fit <- glm(any_nmu_numeric ~ DEM_HISPANIC, data = eighteen, family = binomial)
@@ -261,6 +261,25 @@ glm_fit <- glm(any_nmu_numeric ~ COLLEGE_SIZE, data = eighteen, family = binomia
 summary(glm_fit)
 
 #College Housing: Significant. Positive coefficient so students living in on-campus housing are more likely for NMU. Counter-Intuitive??
-glm_fit <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
-summary(glm_fit)
+glm_fit3 <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
+summary(glm_fit3)
+
+glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + DEM_AGE + COLLEGE_HOUSING, data = eighteen, family = binomial)
+summary(glm_fit4)
 ```
+
+```{r}
+threshold <- 0.19
+
+glm_fit4 %>%
+  augment(type.predict = "response") %>%
+  mutate(predict_NMU_Use = .fitted >= threshold) %>%
+  count(any_nmu_numeric, predict_NMU_Use)
+
+augment(glm_fit4, type.predict = 'response') %>%
+  ggplot(aes(x = factor(any_nmu_numeric), y = .fitted)) +
+  geom_boxplot() +
+  labs(x = 'NMU of prescription opioids', y = 'Predicted Probability of NMU of prescription opioids') + 
+  theme_classic()
+```
+
