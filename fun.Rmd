@@ -1,0 +1,27 @@
+---
+title: "fun"
+author: "Nolan Meyer"
+date: "3/25/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(tidyverse)
+library(dplyr) 
+library(readr)
+library(ggplot2)
+```
+
+```{r}
+us_18Q1 <- read_csv("us_18Q1.csv")
+
+eighteen <- us_18Q1 %>% 
+  filter(DEM_AGE == 18)
+
+eighteen
+```
