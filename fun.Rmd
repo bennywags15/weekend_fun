@@ -21,7 +21,18 @@ library(ggplot2)
 us_18Q1 <- read_csv("us_18Q1.csv")
 
 eighteen <- us_18Q1 %>% 
-  filter(DEM_AGE == 18)
+  filter(DEM_AGE10 == 1,
+         DEM_COLLEGE == 1,
+         DEM_STDNT == 1) %>% 
+  select(FENT_USE:DIHY_NMU)
 
-eighteen
+#opioid use
+eighteen %>% 
+  replace(is.na(.), 0) %>% 
+  summarise_all(funs(sum)) %>% 
+  pivot_longer(cols = FENT_USE:DIHY_NMU,
+               names_to = "drug",
+               values_to = "num") %>% 
+  ggplot(aes(x = num, y = drug)) +
+  geom_col()
 ```
