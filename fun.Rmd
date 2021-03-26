@@ -24,7 +24,9 @@ eighteen <- us_18Q1 %>%
   filter(DEM_AGE10 == 1,
          DEM_COLLEGE == 1,
          DEM_STDNT == 1) 
+```
 
+```{r}
 #PHARMACEUTICAL/PRESCRIPTION opioids non-medical use
 eighteen %>% 
   select(ends_with("NMU")) %>% 
@@ -61,4 +63,28 @@ eighteen %>%
         axis.text.y = element_text(size = 10, colour = "Black"),
         legend.position = "none"
         )
+```
+
+```{r}
+#Adding indicator of ANY non-medical prescription opiod use
+eighteen_nmu <- eighteen %>% 
+  select(ends_with("NMU")) %>% 
+  rename(Fentanyl = FENT_NMU,
+         Buprenorphine = BUP_NMU,
+         Methadone = METH_NMU,
+         Morphine = MORPH_NMU,
+         Oxycodone = OXY_NMU,
+         Oxymorphone = OXYM_NMU,
+         Tramadol = TRAM_NMU,
+         Tapentadol = TAP_NMU,
+         Hydrocodone = HYD_NMU,
+         Hydromorphone = HYDM_NMU,
+         Sufentanil = SUF_NMU,
+         Codeine = COD_NMU,
+         Dihydrocodeine = DIHY_NMU) %>% 
+  select(Fentanyl:Dihydrocodeine) %>% 
+  replace(is.na(.), 0) %>%
+  mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
+
+eighteen_nmu
 ```
