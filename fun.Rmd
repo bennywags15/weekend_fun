@@ -48,8 +48,8 @@ eighteen %>%
                values_to = "num") %>% 
   ggplot(aes(x = num, y = fct_reorder(drug, num))) +
   geom_col(color = "#21C09C", fill = "#21C09C") +
-  labs(title = "Non-medical drug use by college students age 18-24 in 2018", x = "", y = "", caption = "Totals out of 1,277 college students age 18-24 surveyed in 2018") +
-  theme(plot.title = element_text(size = 14, face = "bold", hjust = -3.8, colour = "Black"),
+  labs(title = "Non-medical use of opioids by college students age 18-24 in 2018", x = "", y = "", caption = "Totals out of 1,277 college students age 18-24 surveyed in 2018") +
+  theme(plot.title = element_text(size = 14, face = "bold", hjust = 7.55, colour = "Black"),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_blank(),
