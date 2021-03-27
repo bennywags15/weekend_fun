@@ -375,6 +375,10 @@ augment(glm_fit4, type.predict = 'response') %>%
   geom_boxplot() +
   labs(x = 'NMU of prescription opioids', y = 'Predicted Probability of NMU of prescription opioids') + 
   theme_classic()
+
+coef(glm_fit4) %>% exp() # exp estimates
+confint(glm_fit4) %>% exp() # confidence intervals
+tidy(glm_fit4) # p-values
 ```
 
 
