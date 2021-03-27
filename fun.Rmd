@@ -363,18 +363,30 @@ summary(glm_fit)
 
 
 ```{r}
-threshold <- 0.25
+threshold <- 0.16 ####DECIDE ON THIS
 
 glm_fit4 %>%
   augment(type.predict = "response") %>%
   mutate(predict_NMU_Use = .fitted >= threshold) %>%
-  count(any_nmu_numeric, predict_NMU_Use)
+  count(any_nmu_numeric, predict_NMU_Use) %>% 
+  group_by(any_nmu_numeric) %>% 
+  mutate(prop = n/sum(n))
 
 augment(glm_fit4, type.predict = 'response') %>%
   ggplot(aes(x = factor(any_nmu_numeric), y = .fitted)) +
   geom_boxplot() +
-  labs(x = 'NMU of prescription opioids', y = 'Predicted Probability of NMU of prescription opioids') + 
-  theme_classic()
+  labs(x = 'No NMU of prescription opiods            Used prescription opiods non-medically', title = 'Predicted probability of NMU of prescription opioids', y = "") + 
+  theme_classic() +
+  geom_hline(yintercept = threshold, color = "red", size = 1, alpha = 0.75) +
+  theme(plot.title = element_text(size = 13, face = "bold", hjust = -0.22, colour = "Black"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.background = element_rect(fill = "azure"),
+        panel.background = element_rect(fill = "azure"),
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, colour = "Black"))
 
 coef(glm_fit4) %>% exp() # exp estimates
 confint(glm_fit4) %>% exp() # confidence intervals
