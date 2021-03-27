@@ -304,6 +304,67 @@ glm_fit10 <- glm(any_nmu_numeric ~ any_mental, data = eighteen, family = binomia
 summary(glm_fit10)
 ```
 
+
+
+```{r}
+#Mental Illness Diagnoses as a Predictor for *any_nmu_numeric*
+
+#Anxiety: Highly significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_ANX, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#ADHD: Significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_ADHD, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Autism: Significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_AUT, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Bipolar: Highly significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_BIP, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Borderline Personality Disorder: Highly significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_BPD, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Depression: Highly significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_DEP, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Eating Disorder: Highly significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_EAT, data = eighteen, family = binomial)
+summary(glm_fit)
+
+
+#OCD: Non-significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_OCD, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Panic Disorder: Non-significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_PPD, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#PTSD: Non-significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_PTSD, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Schizophrenia: Slightly significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_SCH, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Other: Non-significant
+glm_fit <- glm(any_nmu_numeric ~ MENT_OTH, data = eighteen, family = binomial)
+summary(glm_fit)
+
+#Variables that are significant predictors of *any_nmu_numeric* individually: MENT_ANX, MENT_ADHD, MENT_AUT, MENT_BIP, MENT_BPD, MENT_DEP, MENT_EAT, and MENT_SCH
+```
+
+
+
+
+
 ```{r}
 threshold <- 0.19
 
@@ -318,4 +379,6 @@ augment(glm_fit4, type.predict = 'response') %>%
   labs(x = 'NMU of prescription opioids', y = 'Predicted Probability of NMU of prescription opioids') + 
   theme_classic()
 ```
+
+
 
