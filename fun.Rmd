@@ -291,9 +291,6 @@ summary(glm_fit5)
 glm_fit6 <- glm(any_nmu_numeric ~ any_alc, data = eighteen, family = binomial)
 summary(glm_fit6)
 
-glm_fit7 <- glm(any_nmu_numeric ~ Hawaii_or_PI, data = eighteen, family = binomial)
-summary(glm_fit7)
-
 glm_fit8 <- glm(any_nmu_numeric ~ rxsafe, data = eighteen, family = binomial)
 summary(glm_fit8)
 
