@@ -282,7 +282,7 @@ summary(glm_fit)
 glm_fit3 <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
 summary(glm_fit3)
 
-glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc + rxsafe +any_mental, data = eighteen, family = binomial)
+glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc + rxsafe + any_mental, data = eighteen, family = binomial)
 summary(glm_fit4)
 
 glm_fit5 <- glm(any_nmu_numeric ~ any_chronic, data = eighteen, family = binomial)
