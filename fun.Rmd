@@ -29,10 +29,11 @@ eighteen <- us_18Q1 %>%
          DEM_COLLEGE == 1,
          DEM_STDNT == 1) %>% 
   mutate(any_chronic = (PAIN_CHRONIC != 1),
-         any_alc = (ALC_USE != 1),
-         rxsafe = (RXDRUGSAFE_HIGH == 1),
-         any_mental = (MENT_ANX == 1 | MENT_ADHD == 1 | MENT_AUT == 1 | MENT_BIP == 1 | MENT_BPD == 1 | MENT_DEP == 1 | MENT_EAT == 1),
-         curr_tob = (TOB_USE == 1))
+         any_alcohol = (ALC_USE != 1),
+         rx_drugs_safe_high = (RXDRUGSAFE_HIGH == 1),
+         mental_hlth = (MENT_ANX == 1 | MENT_ADHD == 1 | MENT_AUT == 1 | MENT_BIP == 1 | MENT_BPD == 1 | MENT_DEP == 1 | MENT_EAT == 1),
+         current_tobacco = (TOB_USE == 1),
+         DEM_GENDER = ifelse(DEM_GENDER == 1, 1, 0))
 ```
 
 
@@ -223,7 +224,7 @@ a <- us_18Q1 %>%
 
 b <- a %>% 
   mutate(any_chronic = (PAIN_CHRONIC != 1),
-         any_alc = (ALC_USE != 1))
+         any_alcohol = (ALC_USE != 1))
 
 #Regression model on greek life: Significant
 glm.mod <- a %>% with(glm(any_nmu ~ COLLEGE_GREEK, family = binomial))
@@ -236,7 +237,7 @@ glm.mod1
 tidy(glm.mod1)
 exp(confint(glm.mod1)) %>% round(2)
 
-glm.mod2 <- b %>% with(glm(any_nmu ~ any_alc, family = binomial))
+glm.mod2 <- b %>% with(glm(any_nmu ~ any_alcohol, family = binomial))
 glm.mod2
 tidy(glm.mod2)
 exp(confint(glm.mod2)) %>% round(2)
@@ -283,22 +284,22 @@ summary(glm_fit)
 glm_fit3 <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
 summary(glm_fit3)
 
-glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc + rxsafe + any_mental + curr_tob, data = eighteen, family = binomial)
+glm_fit4 <- glm(any_nmu_numeric ~ DEM_GENDER + COLLEGE_GREEK  + any_alcohol + current_tobacco + any_chronic + mental_hlth + rx_drugs_safe_high, data = eighteen, family = binomial)
 summary(glm_fit4)
 
 glm_fit5 <- glm(any_nmu_numeric ~ any_chronic, data = eighteen, family = binomial)
 summary(glm_fit5)
 
-glm_fit6 <- glm(any_nmu_numeric ~ any_alc, data = eighteen, family = binomial)
+glm_fit6 <- glm(any_nmu_numeric ~ any_alcohol, data = eighteen, family = binomial)
 summary(glm_fit6)
 
-glm_fit8 <- glm(any_nmu_numeric ~ rxsafe, data = eighteen, family = binomial)
+glm_fit8 <- glm(any_nmu_numeric ~ rx_drugs_safe_high, data = eighteen, family = binomial)
 summary(glm_fit8)
 
-glm_fit10 <- glm(any_nmu_numeric ~ any_mental, data = eighteen, family = binomial)
+glm_fit10 <- glm(any_nmu_numeric ~ mental_hlth, data = eighteen, family = binomial)
 summary(glm_fit10)
 
-glm_fit11 <- glm(any_nmu_numeric ~ curr_tob, data = eighteen, family = binomial)
+glm_fit11 <- glm(any_nmu_numeric ~ current_tobacco, data = eighteen, family = binomial)
 summary(glm_fit11)
 ```
 
@@ -377,7 +378,7 @@ augment(glm_fit4, type.predict = 'response') %>%
   geom_boxplot() +
   labs(x = 'No NMU of prescription opiods            Used prescription opiods non-medically', title = 'Predicted probability of NMU of prescription opioids', y = "") + 
   theme_classic() +
-  geom_hline(yintercept = threshold, color = "red", size = 1, alpha = 0.75) +
+  geom_hline(yintercept = threshold, color = "darkorange", size = 1) +
   theme(plot.title = element_text(size = 13, face = "bold", hjust = -0.22, colour = "Black"),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
