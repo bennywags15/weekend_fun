@@ -29,7 +29,12 @@ eighteen <- us_18Q1 %>%
          DEM_COLLEGE == 1,
          DEM_STDNT == 1) %>% 
   mutate(any_chronic = (PAIN_CHRONIC != 1),
-         any_alc = (ALC_USE != 1))
+         any_alc = (ALC_USE != 1),
+         White = (DEM_RACE == 1),
+         Black = (DEM_RACE == 2),
+         Asian = (DEM_RACE == 3),
+         Indian_or_Native = (DEM_RACE == 4),
+         Hawaii_or_PI = (DEM_RACE == 5))
 ```
 
 
@@ -288,6 +293,9 @@ summary(glm_fit5)
 
 glm_fit6 <- glm(any_nmu_numeric ~ any_alc, data = eighteen, family = binomial)
 summary(glm_fit6)
+
+glm_fit7 <- glm(any_nmu_numeric ~ Hawaii_or_PI, data = eighteen, family = binomial)
+summary(glm_fit7)
 ```
 
 ```{r}
