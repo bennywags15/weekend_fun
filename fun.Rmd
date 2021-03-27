@@ -359,7 +359,7 @@ summary(glm_fit)
 
 
 ```{r}
-threshold <- 0.19
+threshold <- 0.2
 
 glm_fit4 %>%
   augment(type.predict = "response") %>%
