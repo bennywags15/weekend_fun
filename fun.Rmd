@@ -28,7 +28,8 @@ eighteen <- us_18Q1 %>%
   filter(DEM_AGE10 == 1,
          DEM_COLLEGE == 1,
          DEM_STDNT == 1) %>% 
-  mutate(any_chronic = (PAIN_CHRONIC != 1))
+  mutate(any_chronic = (PAIN_CHRONIC != 1),
+         any_alc = (ALC_USE != 1))
 ```
 
 
@@ -218,7 +219,8 @@ a <- us_18Q1 %>%
   mutate(any_nmu = (Fentanyl == 1 | Buprenorphine == 1 | Methadone == 1 | Morphine == 1 | Oxycodone == 1 |Oxymorphone == 1 | Tramadol == 1 | Tapentadol == 1 | Hydrocodone == 1 | Hydromorphone == 1 | Sufentanil == 1 | Codeine == 1 | Dihydrocodeine == 1))
 
 b <- a %>% 
-  mutate(any_chronic = (PAIN_CHRONIC != 1))
+  mutate(any_chronic = (PAIN_CHRONIC != 1),
+         any_alc = (ALC_USE != 1))
 
 #Regression model on greek life: Significant
 glm.mod <- a %>% with(glm(any_nmu ~ COLLEGE_GREEK, family = binomial))
@@ -230,6 +232,11 @@ glm.mod1 <- b %>% with(glm(any_nmu ~ any_chronic, family = binomial))
 glm.mod1
 tidy(glm.mod1)
 exp(confint(glm.mod1)) %>% round(2)
+
+glm.mod2 <- b %>% with(glm(any_nmu ~ any_alc, family = binomial))
+glm.mod2
+tidy(glm.mod2)
+exp(confint(glm.mod2)) %>% round(2)
 ```
 
 
@@ -273,15 +280,18 @@ summary(glm_fit)
 glm_fit3 <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
 summary(glm_fit3)
 
+glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc, data = eighteen, family = binomial)
+summary(glm_fit4)
+
 glm_fit5 <- glm(any_nmu_numeric ~ any_chronic, data = eighteen, family = binomial)
 summary(glm_fit5)
 
-glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + DEM_AGE + COLLEGE_HOUSING + any_chronic, data = eighteen, family = binomial)
-summary(glm_fit4)
+glm_fit6 <- glm(any_nmu_numeric ~ any_alc, data = eighteen, family = binomial)
+summary(glm_fit6)
 ```
 
 ```{r}
-threshold <- 0.195
+threshold <- 0.19
 
 glm_fit4 %>%
   augment(type.predict = "response") %>%
