@@ -31,7 +31,8 @@ eighteen <- us_18Q1 %>%
   mutate(any_chronic = (PAIN_CHRONIC != 1),
          any_alc = (ALC_USE != 1),
          rxsafe = (RXDRUGSAFE_HIGH == 1),
-         any_mental = (MENT_ANX == 1 | MENT_ADHD == 1 | MENT_AUT == 1 | MENT_BIP == 1 | MENT_BPD == 1 | MENT_DEP == 1 | MENT_EAT == 1))
+         any_mental = (MENT_ANX == 1 | MENT_ADHD == 1 | MENT_AUT == 1 | MENT_BIP == 1 | MENT_BPD == 1 | MENT_DEP == 1 | MENT_EAT == 1),
+         curr_tob = (TOB_USE == 1))
 ```
 
 
@@ -282,7 +283,7 @@ summary(glm_fit)
 glm_fit3 <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
 summary(glm_fit3)
 
-glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc + rxsafe + any_mental, data = eighteen, family = binomial)
+glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc + rxsafe + any_mental + curr_tob, data = eighteen, family = binomial)
 summary(glm_fit4)
 
 glm_fit5 <- glm(any_nmu_numeric ~ any_chronic, data = eighteen, family = binomial)
@@ -296,6 +297,9 @@ summary(glm_fit8)
 
 glm_fit10 <- glm(any_nmu_numeric ~ any_mental, data = eighteen, family = binomial)
 summary(glm_fit10)
+
+glm_fit11 <- glm(any_nmu_numeric ~ curr_tob, data = eighteen, family = binomial)
+summary(glm_fit11)
 ```
 
 
@@ -359,7 +363,7 @@ summary(glm_fit)
 
 
 ```{r}
-threshold <- 0.2
+threshold <- 0.25
 
 glm_fit4 %>%
   augment(type.predict = "response") %>%
