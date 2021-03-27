@@ -337,7 +337,6 @@ summary(glm_fit)
 glm_fit <- glm(any_nmu_numeric ~ MENT_EAT, data = eighteen, family = binomial)
 summary(glm_fit)
 
-
 #OCD: Non-significant
 glm_fit <- glm(any_nmu_numeric ~ MENT_OCD, data = eighteen, family = binomial)
 summary(glm_fit)
