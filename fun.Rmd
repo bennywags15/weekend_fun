@@ -294,9 +294,6 @@ summary(glm_fit6)
 glm_fit8 <- glm(any_nmu_numeric ~ rxsafe, data = eighteen, family = binomial)
 summary(glm_fit8)
 
-glm_fit9 <- glm(any_nmu_numeric ~ acute_pain, data = eighteen, family = binomial)
-summary(glm_fit9)
-
 glm_fit10 <- glm(any_nmu_numeric ~ any_mental, data = eighteen, family = binomial)
 summary(glm_fit10)
 ```
