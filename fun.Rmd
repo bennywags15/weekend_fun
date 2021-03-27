@@ -30,11 +30,8 @@ eighteen <- us_18Q1 %>%
          DEM_STDNT == 1) %>% 
   mutate(any_chronic = (PAIN_CHRONIC != 1),
          any_alc = (ALC_USE != 1),
-         White = (DEM_RACE == 1),
-         Black = (DEM_RACE == 2),
-         Asian = (DEM_RACE == 3),
-         Indian_or_Native = (DEM_RACE == 4),
-         Hawaii_or_PI = (DEM_RACE == 5))
+         rxsafe = (RXDRUGSAFE_HIGH == 1),
+         any_mental = (MENT_ANX == 1 | MENT_ADHD == 1 | MENT_AUT == 1 | MENT_BIP == 1 | MENT_BPD == 1 | MENT_DEP == 1 | MENT_EAT == 1))
 ```
 
 
@@ -285,7 +282,7 @@ summary(glm_fit)
 glm_fit3 <- glm(any_nmu_numeric ~ COLLEGE_HOUSING, data = eighteen, family = binomial)
 summary(glm_fit3)
 
-glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc, data = eighteen, family = binomial)
+glm_fit4 <- glm(any_nmu_numeric ~ COLLEGE_GREEK + DEM_GENDER + any_chronic + any_alc + rxsafe +any_mental, data = eighteen, family = binomial)
 summary(glm_fit4)
 
 glm_fit5 <- glm(any_nmu_numeric ~ any_chronic, data = eighteen, family = binomial)
@@ -296,6 +293,15 @@ summary(glm_fit6)
 
 glm_fit7 <- glm(any_nmu_numeric ~ Hawaii_or_PI, data = eighteen, family = binomial)
 summary(glm_fit7)
+
+glm_fit8 <- glm(any_nmu_numeric ~ rxsafe, data = eighteen, family = binomial)
+summary(glm_fit8)
+
+glm_fit9 <- glm(any_nmu_numeric ~ acute_pain, data = eighteen, family = binomial)
+summary(glm_fit9)
+
+glm_fit10 <- glm(any_nmu_numeric ~ any_mental, data = eighteen, family = binomial)
+summary(glm_fit10)
 ```
 
 ```{r}
